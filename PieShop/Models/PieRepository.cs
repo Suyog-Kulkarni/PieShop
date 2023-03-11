@@ -29,5 +29,10 @@ namespace PieShop.Models
         {
             return _context.Pies.FirstOrDefault(p => p.PieId == pieId);
         }
+
+        public Pie? Myfun()
+        {
+            return _context.Pies.SingleOrDefault(p => p.PieId == 0);
+        }
     }
 }

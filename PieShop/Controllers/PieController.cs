@@ -23,6 +23,7 @@ namespace PieShop.Controllers
         {
             /*ViewBag.CurrentCategory = "Cheese cake";
             return View(_ieRepository.AllPies);*/
+            
             PieListViewModel pieListViewModel = new PieListViewModel(_ieRepository.AllPies,"Cheese cake");
             return View(pieListViewModel);
         }
