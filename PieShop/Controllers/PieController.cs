@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using PieShop.Models;
 using PieShop.ViewModels;
 
@@ -19,13 +20,27 @@ namespace PieShop.Controllers
         {
             return View();
         }
-        public ViewResult List()
+        public IActionResult List()
         {
             /*ViewBag.CurrentCategory = "Cheese cake";
             return View(_ieRepository.AllPies);*/
             
-            PieListViewModel pieListViewModel = new PieListViewModel(_ieRepository.AllPies,"Cheese cake");
+            PieListViewModel pieListViewModel = new PieListViewModel(_ieRepository.AllPies,"All Pies");
             return View(pieListViewModel);
+
+            
+        }
+        public IActionResult Details(int id)
+        {
+            var pie = _ieRepository.GetPieById(id);
+            if (pie is null)
+            {
+
+                return NotFound();
+            }
+
+            return View(pie);// returning the pie object to the view 
+            
         }
     }
 }
