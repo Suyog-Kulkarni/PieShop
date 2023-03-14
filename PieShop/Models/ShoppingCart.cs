@@ -69,15 +69,20 @@ namespace PieShop.Models
 
             var localAmount = 0;
 
-            if(shoppingCartItem is not null && shoppingCartItem.Amount > 1)
+            if(shoppingCartItem is not null)
             {
-                shoppingCartItem.Amount--;
-                localAmount=shoppingCartItem.Amount;// check here
+                if(shoppingCartItem.Amount > 1)
+                {
+                    shoppingCartItem.Amount--;
+                    localAmount = shoppingCartItem.Amount;// check here
+                }
+                else
+                {
+                    _bethanysPieShopDbContext.ShoppingCartItems.Remove(shoppingCartItem);
+                }
+
             }
-            else
-            {
-                _bethanysPieShopDbContext.ShoppingCartItems.Remove(shoppingCartItem);
-            }
+           
             _bethanysPieShopDbContext.SaveChanges();
             return localAmount;
         }

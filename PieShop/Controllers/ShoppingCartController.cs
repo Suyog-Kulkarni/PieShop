@@ -23,6 +23,7 @@ public class ShoppingCartController : Controller
 
     public RedirectToActionResult AddtoCart(int Id)
     {
+        Console.WriteLine(Id);
         var selectedpie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId== Id);
         if(selectedpie is not null)
         {
