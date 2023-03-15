@@ -21,11 +21,12 @@ public class ShoppingCartController : Controller
         return View(ShoppingCartViewModel);
     }
 
-    public RedirectToActionResult AddtoCart(int Id)
+    public RedirectToActionResult AddtoCart(int id)
     {
-        Console.WriteLine(Id);
-        var selectedpie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId== Id);
-        if(selectedpie is not null)
+        
+        var selectedpie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == id );
+       
+        if (selectedpie is not null)
         {
             _shoppingCart.AddtoCart(selectedpie);
         }

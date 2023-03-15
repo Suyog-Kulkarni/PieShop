@@ -88,7 +88,7 @@ namespace PieShop.Models
         }
         public List<ShoppingCartItem> GetShoppingCartItems()
         {
-            return ShoppingCartItems ??= _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId == ShoppingCartId).Include(s => s.Pie).ToList();        // to return shoppingcartitems list
+            return ShoppingCartItems = _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId == ShoppingCartId).Include(s => s.Pie).ToList();        // to return shoppingcartitems list
         }
 
         public void ClearCart()

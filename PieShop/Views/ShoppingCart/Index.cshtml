@@ -3,12 +3,20 @@
 <h3 class="my-5">
     Shopping cart
 </h3>
-
+@*@if(Model.ShoppingCart.ShoppingCartItems is null)
+{
+    <h2>it is null</h2>
+}
+else
+{<h2> @Model.ShoppingCart.ShoppingCartItems</h2>*@
+    
 
 <div class="row gx-3">
     <div class="col-8">
         @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
         {
+            <h3>@line.Pie.PieId</h3>
+            <h3>frfrfrf</h3>
             <div class="card shopping-cart-card mb-2">
                 <div class="row">
                     <div class="col-md-4">
@@ -25,13 +33,14 @@
                     </div>
                 </div>
             </div>
+            <h3>@line.Pie.PieId</h3>
         }
     </div>
     <div class="col-4">
         <div class="card shopping-cart-card p-3">
             <div class="row">
                 <h4 class="col">Total:</h4>
-                <h4 class="col text-end">@Model.ShoopingCartTotal.ToString()</h4>
+                <h4 class="col text-end">@Model.ShoopingCartTotal</h4>
             </div>
             <hr />
             <div class="text-center d-grid">
