@@ -24,23 +24,28 @@ namespace PieShop.Models
         /*IHttpContextAccessors is an interface in ASP.NET Core that provides access to the current HttpContext.
          It is used to access the HttpContext instance in code where it is not directly available
         such as in a class or service that is not part of the request processing pipeline.*/
-        public static ShoppingCart GetCart(IServiceProvider serviceProvider)
+        public static ShoppingCart GetCart(IServiceProvider services)
         {
-            ISession? session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
+            ISession? session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
 
-            BethanysPieShopDbContext context = serviceProvider.GetService<BethanysPieShopDbContext>() ?? throw new Exception("Error initializing");
+            BethanysPieShopDbContext context = services.GetService<BethanysPieShopDbContext>() ?? throw new Exception("Error initializing");
 
             string cartId = session?.GetString("CartID") ?? Guid.NewGuid().ToString();
 
             session?.SetString("CartId", cartId);
+            CookieOptions cookieOptions = new CookieOptions();
+
+            cookieOptions.Secure = true;
+            /*cookieOptions.HttpOnly = true;*/
+            cookieOptions.SameSite = SameSiteMode.None;
 
             return new ShoppingCart(context) { ShoppingCartId = cartId };
 
         }
-        public IEnumerable<ShoppingCartItem> TowriteWhere()
+        /*public IEnumerable<ShoppingCartItem> TowriteWhere()
         {
             return _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId == ShoppingCartId);
-        }
+        }*/
 
         public void AddtoCart(Pie pie)
         {
@@ -65,20 +70,20 @@ namespace PieShop.Models
         }
         public int RemoveeFromCart(Pie pie)
         {
-            var shoppingCartItem = _bethanysPieShopDbContext.ShoppingCartItems.SingleOrDefault(p => p.Pie.PieId == pie.PieId && p.ShoppingCartId == ShoppingCartId);
+            var ShoppingCartItem = _bethanysPieShopDbContext.ShoppingCartItems.SingleOrDefault(p => p.Pie.PieId == pie.PieId /*&& p.ShoppingCartId == ShoppingCartId*/);
 
             var localAmount = 0;
 
-            if(shoppingCartItem is not null)
+            if(ShoppingCartItem is not null)
             {
-                if(shoppingCartItem.Amount > 1)
+                if(ShoppingCartItem.Amount > 1)
                 {
-                    shoppingCartItem.Amount--;
-                    localAmount = shoppingCartItem.Amount;// check here
+                    ShoppingCartItem.Amount--;
+                    localAmount = ShoppingCartItem.Amount;// check here
                 }
                 else
                 {
-                    _bethanysPieShopDbContext.ShoppingCartItems.Remove(shoppingCartItem);
+                    _bethanysPieShopDbContext.ShoppingCartItems.Remove(ShoppingCartItem);
                 }
 
             }
@@ -88,19 +93,20 @@ namespace PieShop.Models
         }
         public List<ShoppingCartItem> GetShoppingCartItems()
         {
-            return ShoppingCartItems = _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId == ShoppingCartId).Include(s => s.Pie).ToList();        // to return shoppingcartitems list
+            return ShoppingCartItems ??= _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId==ShoppingCartId).Include(p =>p.Pie).ToList();// to return shoppingcartitems list
+            
         }
 
         public void ClearCart()
         {
-            var cartItem = TowriteWhere();
+            var cartItem = _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId == ShoppingCartId);
 
             _bethanysPieShopDbContext.ShoppingCartItems.RemoveRange(cartItem);
             _bethanysPieShopDbContext.SaveChanges();
         }
         public decimal GetShoppingCartTotal()
         {
-            var total = TowriteWhere().Select(c => c.Pie.Price * c.Amount).Sum();
+            var total = _bethanysPieShopDbContext.ShoppingCartItems.Where(p => p.ShoppingCartId==ShoppingCartId).Select(c => c.Pie.Price * c.Amount).Sum();
             return total;
         }
     }

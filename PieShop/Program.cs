@@ -18,7 +18,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 
 //Making connection to the database 
-builder.Services.AddDbContextPool<BethanysPieShopDbContext>(options => {
+builder.Services.AddDbContext<BethanysPieShopDbContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BethanysPieShopContextConnection"));
 });
 

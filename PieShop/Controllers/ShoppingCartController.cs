@@ -13,10 +13,13 @@ public class ShoppingCartController : Controller
     }
     public ViewResult Index()
     {
-        var list = _shoppingCart.GetShoppingCartItems();
+        var list = _shoppingCart.GetShoppingCartItems().ToList();
         _shoppingCart.ShoppingCartItems = list;
 
+        Console.WriteLine(_shoppingCart.ShoppingCartItems.Count);
+
         var ShoppingCartViewModel = new ShoppingCartViewModel(_shoppingCart,_shoppingCart.GetShoppingCartTotal());
+
 
         return View(ShoppingCartViewModel);
     }
@@ -30,7 +33,8 @@ public class ShoppingCartController : Controller
         {
             _shoppingCart.AddtoCart(selectedpie);
         }
-        return RedirectToAction("Index");
+        
+        return RedirectToAction("Index","ShoppingCart");
     }
     public RedirectToActionResult RemoveFromCart(int Id) 
     {
