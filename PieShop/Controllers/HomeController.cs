@@ -15,7 +15,6 @@ namespace PieShop.Controllers
             _logger = logger;
             _ieRepository = ieRepository;
         }
-
         public IActionResult Index()
         {
             var piesoftheweek = _ieRepository.PiesOfTheWeek;

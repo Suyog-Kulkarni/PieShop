@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 namespace PieShop.Models
 {
@@ -29,15 +30,15 @@ namespace PieShop.Models
             ISession? session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
 
             BethanysPieShopDbContext context = services.GetService<BethanysPieShopDbContext>() ?? throw new Exception("Error initializing");
-
+            /*CookieOptions cookieOptions = new CookieOptions();
+            cookieOptions.SameSite=  SameSiteMode.Unspecified;
+            cookieOptions.Secure = true;
+            cookieOptions.HttpOnly = true;*/
             string cartId = session?.GetString("CartID") ?? Guid.NewGuid().ToString();
 
-            session?.SetString("CartId", cartId);
-            CookieOptions cookieOptions = new CookieOptions();
 
-            cookieOptions.Secure = true;
-            /*cookieOptions.HttpOnly = true;*/
-            cookieOptions.SameSite = SameSiteMode.None;
+            session?.SetString("CartId", cartId);
+
 
             return new ShoppingCart(context) { ShoppingCartId = cartId };
 

@@ -1,8 +1,36 @@
 using BethanysPieShop.Models;
 using Microsoft.EntityFrameworkCore;
 using PieShop.Models;
+using Microsoft.AspNetCore.Identity;
+using PieShop.Areas.Identity.Data;
+using PieShop.Data;
+/*using PieShop.Data;
+using PieShop.Areas.Identity.Data;
+*/
+/*using PieShop.Data;
+using PieShop.Areas.Identity.Data;*/
 
 var builder = WebApplication.CreateBuilder(args);
+/*builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+    options.OnAppendCookie = cookieContext =>
+        CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+    options.OnDeleteCookie = cookieContext =>
+        CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+});
+
+void CheckSameSite(HttpContext httpContext, CookieOptions options)
+{
+    if (options.SameSite == SameSiteMode.None)
+    {
+        var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
+        if (MyUserAgentDetectionLib.DisallowsSameSiteNone(userAgent))
+        {
+            options.SameSite = SameSiteMode.Unspecified;
+        }
+    }
+}*/
 
 // dependency injection
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();// add the interface and the class that implements
@@ -10,6 +38,7 @@ builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();// add the 
 builder.Services.AddScoped<IPieRepository,PieRepository>();
 
 builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));// explain this code 
+
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 
@@ -21,6 +50,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BethanysPieShopDbContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BethanysPieShopContextConnection"));
 });
+
+builder.Services.AddDbContext<PieShopDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PieShopDbContextConnection"));
+});
+
+builder.Services.AddDefaultIdentity<PieShopApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<PieShopDbContext>();
 
 var app = builder.Build();
 
@@ -35,13 +72,17 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
+app.UseCookiePolicy();
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id:int?}");
+
+app.MapRazorPages();
 
 DbInitializer.Seed(app);
 
