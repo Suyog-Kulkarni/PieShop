@@ -102,6 +102,10 @@ body {
 .login-logout-card .card-body{
     padding: 10px 20px;
 }
+.navbar{
+    float: right;
+    
+}
 
 hr {
     margin: 1rem 0;

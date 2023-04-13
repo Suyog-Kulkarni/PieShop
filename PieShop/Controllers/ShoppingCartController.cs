@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using PieShop.Models;
 
 public class ShoppingCartController : Controller
@@ -16,6 +17,7 @@ public class ShoppingCartController : Controller
         var list = _shoppingCart.GetShoppingCartItems().ToList();
         _shoppingCart.ShoppingCartItems = list;
 
+       
         Console.WriteLine(_shoppingCart.ShoppingCartItems.Count);
 
         var ShoppingCartViewModel = new ShoppingCartViewModel(_shoppingCart,_shoppingCart.GetShoppingCartTotal());

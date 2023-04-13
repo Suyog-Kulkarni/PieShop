@@ -59,6 +59,12 @@ builder.Services.AddDbContext<PieShopDbContext>(options =>
 builder.Services.AddDefaultIdentity<PieShopApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<PieShopDbContext>();
 
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AddAreaPageRoute("Identity", "/Account/Register", "/Register");
+    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "/Login");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,12 +77,22 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();;
 app.UseSession();
 app.UseCookiePolicy();
 app.UseRouting();
-app.UseAuthentication();;
 
 app.UseAuthorization();
+
+/*app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapRazorPages();
+
+});*/
 
 app.MapControllerRoute(
     name: "default",

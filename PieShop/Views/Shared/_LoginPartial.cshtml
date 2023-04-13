@@ -2,9 +2,9 @@
 @using PieShop.Areas.Identity.Data
 
 @inject SignInManager<PieShopApplicationUser> SignInManager
-@inject UserManager<PieShopApplicationUser> UserManager
+@*@inject UserManager<PieShopApplicationUser> UserManager*@
 
-<ul class="navbar-nav justify-content-end">
+<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
@@ -15,7 +15,16 @@
             <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
         </form>
     </li>
+   @*<li class="nav-item">
+    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+    </li>*@
+    <li class="nav-item">
+    <a asp-controller="Pie" asp-action="List" class="nav-link" >All Pies</a>
+    </li>
+    
+    
 }
+
 else
 {
     <li class="nav-item">
@@ -26,3 +35,6 @@ else
     </li>
 }
 </ul>
+
+
+
