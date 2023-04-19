@@ -21,12 +21,21 @@
             </h4>
 
             <div class="d-flex justify-content-between mt-2">
-                <h2 class="text-start">
-                    <a asp-controller="Pie"
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <h2 class="text-start">
+                        <a asp-controller="Pie"
                        asp-action="Details"
                        asp-route-id="@Model.PieId"
-                       class="pie-link">@Model.Name</a>
-                </h2>
+                        class="pie-link">@Model.Name</a>
+                    </h2>
+                }
+                else
+                {
+                    <h2 class="text-start" >
+                        @Model.Name
+                    </h2>
+                }
                 <h5 class="text-nowrap">
                     @Model.Price.ToString("c")
                 </h5>

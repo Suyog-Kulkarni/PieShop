@@ -1,6 +1,9 @@
 ﻿@model ShoppingCartViewModel
 
+
 @using Microsoft.EntityFrameworkCore.SqlServer;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
 
 <h3 class="my-5">
     Shopping cart
@@ -9,9 +12,35 @@
 <div class="row gx-3">
     <div class="col-8">
         @{
-            //var cmd = SqlCommand();
             var list = Model.ShoppingCart.ShoppingCartItems;
+            Pie pie = new Pie();
+            ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
+
+            ConfigurationManager configurationManager = new ConfigurationManager();
+            using(SqlConnection conn = new SqlConnection(configurationManager.GetConnectionString("PieShopDbContextConnection")))
+            {
+                string query = "INSERT INTO ASpNetUsers(ImageThumbnailUrl, PieName, PieAmount, PieShortDescription, PiePrice) VALUES (@ImageThumbnailUrl, @PieName, @PieAmount, @PieShortDescription, @PiePrice)";
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                foreach(var line in list)
+                {
+                    cmd.Parameters.AddWithValue("@ImageThumbnailUrl", line.Pie.ImageThumbnailUrl);
+                    cmd.Parameters.AddWithValue("@PieName", line.Pie.Name);
+                    cmd.Parameters.AddWithValue("@PieAmount", line.Amount);
+                    cmd.Parameters.AddWithValue("@PieShortDescription", line.Pie.ShortDescription);
+                    cmd.Parameters.AddWithValue("@PiePrice", line.Pie.Price.ToString("c"));
+                    cmd.ExecuteNonQuery();
+                    
+                }
+
+                conn.Close();
+                
+            }
+            
         }
+
+
         @foreach (var line in list)
         {
             <div class="card shopping-cart-card mb-2">

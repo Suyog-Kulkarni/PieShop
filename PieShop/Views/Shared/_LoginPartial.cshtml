@@ -2,13 +2,13 @@
 @using PieShop.Areas.Identity.Data
 
 @inject SignInManager<PieShopApplicationUser> SignInManager
-@*@inject UserManager<PieShopApplicationUser> UserManager*@
+@inject UserManager<PieShopApplicationUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello Welcome Back!</a>
+        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserName(User) </a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

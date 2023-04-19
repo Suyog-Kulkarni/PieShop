@@ -37,7 +37,7 @@ builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();// add the 
 // it to the dependency injection container so that it can be used in the controllers and views of the application 
 builder.Services.AddScoped<IPieRepository,PieRepository>();
 
-builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));// explain this code 
+/*builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));*/// explain this code 
 
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
